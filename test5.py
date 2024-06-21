@@ -19,8 +19,16 @@ def sort_text_by_x_position(ocr_result):
     last_y = None
 
     for item in sorted_result:
+
+        if item['description'] == "[Plus]":
+            continue
+
+        if item['description'].find("[Plus] ") != -1:
+            item['vertices'][0]['y'] = 515
+            item['description'] = item['description'].lstrip("[Plus] ")
+
         current_y = item['vertices'][0]['y']
-        if last_y is None or abs(current_y - last_y) <= 5:
+        if last_y is None or abs(current_y - last_y) <= 10:
             current_line.append(item)
         else:
             grouped_lines.append(current_line)
@@ -44,10 +52,10 @@ def extract_sorted_text(ocr_result):
     sorted_text = ' '.join([item['description'] for item in sorted_result])
     return sorted_text
 
-image_path = "test_lunch.jpg"
+image_path = "test_lunch2.png"
 ocr_result = extract_text_from_file(image_path)
 
-print(ocr_result)
+#print(ocr_result)
 
 # OCR 결과가 문자열 형태인 경우 처리
 if isinstance(ocr_result, str):
